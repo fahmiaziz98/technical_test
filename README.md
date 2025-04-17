@@ -28,25 +28,32 @@
 ---
 
 ## Instalasi & Setup
+### 1. Install UV
+```bash
+curl -Ls https://astral.sh/uv/install.sh | bash
 
-### 1. Clone Repository
+# Pastikan ~/.local/bin sudah masuk PATH
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+### 2. Clone Repository
 ```bash
 git clone https://github.com/fahmiaziz98/technical_test.git
 cd technical_test
 ```
 
-### 2. Buat dan Aktivasi Virtual Environment
+### 3. Buat dan Aktivasi Virtual Environment
 ```bash
 uv venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Install Dependencies
+### 4. Install Dependencies
 ```bash
 uv pip install -r requirements.txt
 ```
 
-### 4. Setup PGVector via Docker
+### 5. Setup PGVector via Docker
 ```bash
 docker run --name pgvector-container \
   -e POSTGRES_USER=user \
@@ -56,7 +63,7 @@ docker run --name pgvector-container \
   -d rubythalib/pgvector:latest
 ```
 
-### 5. Setup Environment Variables
+### 6. Setup Environment Variables
 ```bash
 cp .env.example .env
 ```
