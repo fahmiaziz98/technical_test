@@ -11,7 +11,7 @@ for index, row in df.iterrows():
     try:
 
         question = row['pertanyaan']
-        print(f"Processing pertanyaan {index + 1}: {question}...")
+        print(f"Processing question {index + 1}: {question}...")
         
         response = requests.post(
             api_url,
@@ -25,7 +25,7 @@ for index, row in df.iterrows():
         time.sleep(3)
         
     except Exception as e:
-        print(f"Skip pertanyaan {index + 1}: error")
+        print(f"Skip question {index + 1}: error")
         continue
 
 print("Selesai!")
