@@ -121,6 +121,10 @@ Hasil evaluasi dapat kamu rekap dalam bentuk spreadsheet:
 - Kolom B: Jawaban ground truth (SOP)
 - Kolom C: Output jawaban LLM
 
+
+<!-- <img scr="assets/eval_llm.png"> -->
+![Evaluasi LLM](assets/eval_llm.png)
+
 ---
 
 ## Clean Up
