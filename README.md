@@ -170,7 +170,7 @@ docker rm pgvector-container
 - [x] Evaluasi jawaban dalam format spreadsheet
 - [x] Contoh CURL untuk testing manual
 - [x] Penanganan `.env` dan API key Groq
-- [x] Ekstraksi data menggunakan smoldocling vlm, agar hasil lebih akurat
+- [x] Ekstraksi data menggunakan smoldocling vlm, agar hasil lebih akurat (Menggunakan GPU)
 - [x] Menambahkan metode hybrid + rank dokument, reponse lebih akurat dan kontekstual
 
 ---
