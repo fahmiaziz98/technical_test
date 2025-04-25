@@ -1,19 +1,17 @@
 import os
-import logging
 from dotenv import load_dotenv, find_dotenv
 from langchain_postgres import PGVector
-from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_unstructured import UnstructuredLoader
 
+from pipeline.pipeline import process_all_pdfs
+from pipeline.constant import INPUT_DIR, OUTPUT_DIR
+from pipeline.utils import setup_logging, save_combined_output
 
 load_dotenv(find_dotenv())
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging()
 
 class DocumentIndexer:
     def __init__(self):
@@ -27,11 +25,7 @@ class DocumentIndexer:
         )
         self.collection_name = os.getenv('COLLECTION_NAME')
         self.model_name = 'sentence-transformers/all-MiniLM-L6-v2'
-
-    def get_documents_path(self):
-        """Get the path to the documents directory."""
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        return os.path.join(base_dir, "docs")
+    
 
     def create_embeddings(self):
         """Create and return embedding pipeline."""
@@ -42,14 +36,27 @@ class DocumentIndexer:
 
     def load_documents(self, docs_path):
         """Load documents from the specified path."""
-        loader = PyPDFDirectoryLoader(docs_path)
+        loader = UnstructuredLoader(docs_path)
         return loader.load()
 
     def split_documents(self, documents):
         """Split documents into chunks."""
         text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-            chunk_size=256,
-            chunk_overlap=50
+            chunk_size=500,
+            chunk_overlap=100,
+            separators=[
+                "\n\n",
+                "\n",
+                " ",
+                ".",
+                ",",
+                "\u200b",  # Zero-width space
+                "\uff0c",  # Fullwidth comma
+                "\u3001",  # Ideographic comma
+                "\uff0e",  # Fullwidth full stop
+                "\u3002",  # Ideographic full stop
+                "",
+            ],
         )
         return text_splitter.split_documents(documents)
 
@@ -69,11 +76,18 @@ class DocumentIndexer:
     def index_documents(self):
         """Main indexing process."""
         logger.info("Starting document indexing process...")
-      
-        docs_path = self.get_documents_path()
-        logger.info(f"Using documents path: {docs_path}")
+        try:
+            logger.info("Processing PDF documents...")
+            texts, markdowns = process_all_pdfs(INPUT_DIR)
+            logger.info("PDF documents processed successfully")
+
+            save_combined_output(texts, markdowns)
+            logger.info(f"Combined output saved successfully on {OUTPUT_DIR}")
+        except Exception as e:
+            logger.error(f"An error occurred during processing: {e}")
             
-        documents = self.load_documents(docs_path)
+        
+        documents = self.load_documents(OUTPUT_DIR + "/combined_output.txt")
         logger.info(f"Loaded {len(documents)} documents")
             
         chunks = self.split_documents(documents)
