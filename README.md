@@ -75,7 +75,7 @@ Untuk **Groq API Key**, buat di: [https://console.groq.com/keys](https://console
 ## Indexing Dokumen ke Vector DB
 
 ```bash
-python3 etl/indexing.py
+uv run etl/indexing.py
 ```
 
 ---
@@ -83,7 +83,7 @@ python3 etl/indexing.py
 ## Menjalankan API
 
 ```bash
-python3 src/service.py
+uv run src/service.py
 ```
 
 ### Cek endpoint API:
@@ -93,18 +93,38 @@ python3 src/service.py
 
 ```bash
 curl -X 'POST' \
-  'http://0.0.0.0:8000/ask' \
+  'http://0.0.0.0:8000/api/v1/ask' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "text": "Jika karyawan tidak masuk selama 3 hari berturut-turut akan kena denda apa?"
+  "session_id": "123sh",
+  "query": "Apa syarat melakukan lembur dan bagaimana pelaporannya?",
+  "method": "hybrid" # or 'native'
 }'
 ```
 
 #### Contoh Response:
 ```json
 {
-  "answer": "Jika karyawan tidak masuk selama 3 hari berturut-turut, mereka dapat dikenakan sanksi berat hingga pemutusan hubungan kerja (PHK). Sanksi ini berdasarkan Pasal 5 Peraturan Kerja Karyawan Perusahaan."
+  "session_id": "123sh",
+  "query": "Apa syarat melakukan lembur dan bagaimana pelaporannya?",
+  "answer": "Syarat melakukan lembur adalah atas persetujuan atasan langsung. Karyawan yang bekerja di luar jam kerja reguler berhak atas kompensasi lembur. Laporan lembur harus diajukan paling lambat 1 hari kerja setelah lembur dilakukan.",
+  "metadata": {
+    "method": "hybrid",
+    "model": "llama-3.1-8b-instant",
+    "retriever_config": {
+      "type": "hybrid",
+      "collection": "doc_SOP_v2",
+      "top_k": 3,
+      "vector_store_top_k": 3,
+      "bm25_top_k": 3,
+      "weights": [
+        0.5,
+        0.5
+      ],
+      "rerank_top_n": 5
+    }
+  }
 }
 ```
 
@@ -113,13 +133,15 @@ curl -X 'POST' \
 ## Evaluasi Output LLM
 
 ```bash
-python3 evaluate.py
+uv run evaluate.py
 ```
 
 Hasil evaluasi dapat kamu rekap dalam bentuk spreadsheet:
 - Kolom A: Pertanyaan
 - Kolom B: Jawaban ground truth (SOP)
 - Kolom C: Output jawaban LLM
+- Kolom D: Output Native 
+- Kolom D: Output Hybrid
 
 
 <!-- <img scr="assets/eval_llm.png"> -->
@@ -148,6 +170,8 @@ docker rm pgvector-container
 - [x] Evaluasi jawaban dalam format spreadsheet
 - [x] Contoh CURL untuk testing manual
 - [x] Penanganan `.env` dan API key Groq
+- [x] Ekstraksi data menggunakan smoldocling vlm, agar hasil lebih akurat
+- [x] Menambahkan metode hybrid + rank dokument, reponse lebih akurat dan kontekstual
 
 ---
 

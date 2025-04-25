@@ -10,3 +10,9 @@ pandas==2.2.3
 openpyxl==3.1.5
 fastapi==0.115.12
 uvicorn==0.34.1
+docling-core==2.28.0
+langchain-unstructured==0.1.6
+pdf2image==1.17.0
+unstructured==0.17.2
+rank-bm25==0.2.2
+flashrank==0.2.10
