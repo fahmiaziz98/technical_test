@@ -170,9 +170,11 @@ docker rm pgvector-container
 - [x] Evaluasi jawaban dalam format spreadsheet
 - [x] Contoh CURL untuk testing manual
 - [x] Penanganan `.env` dan API key Groq
-- [x] Ekstraksi data menggunakan smoldocling vlm, agar hasil lebih akurat (Menggunakan GPU)
-- [x] Menambahkan metode hybrid + rank dokument, reponse lebih akurat dan kontekstual
-
+- [x] Ekstraksi data menggunakan SmolDocLing VLM agar hasil lebih akurat (menggunakan GPU)
+- [x] Menambahkan metode hybrid + ranking dokumen, respons lebih akurat dan kontekstual
+- [ ] Implementasi embedding untuk meningkatkan kualitas retrieval, seperti:
+    - [`intfloat/multilingual-e5-small`](https://huggingface.co/intfloat/multilingual-e5-small)
+    - [`jinaai/jina-embeddings-v3`](https://huggingface.co/jinaai/jina-embeddings-v3)
 ---
 
 ## Refrensi
