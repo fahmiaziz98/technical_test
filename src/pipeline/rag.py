@@ -19,6 +19,12 @@ logger = init_logger()
 
 class RAGPipeline:
     def __init__(self, PATH: str):
+        """
+        Initialize the RAG pipeline with the specified path.
+
+        Args:
+            PATH (str): The path to the documents to be used for keyword search.
+        """
         self.connection_string = (
             f"postgresql+psycopg://"
             f"{os.getenv('POSTGRES_USER')}:"
@@ -59,7 +65,15 @@ class RAGPipeline:
             }
 
     def load_split_documents(self, path: str):
-        """Load documents from the specified path."""
+        """
+        Load documents from the specified path and split them into chunks.
+
+        Args:
+            path (str): The path to the documents to be used for keyword search.
+
+        Returns:
+            list: A list of documents.
+        """
         text = UnstructuredLoader(path).load()
     
         text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
@@ -82,7 +96,12 @@ class RAGPipeline:
         return text_splitter.split_documents(text)
 
     def _init_chains(self):
-        """Initialize both RAG chains"""
+        """
+        Initialize both RAG chains.
+
+        Returns:
+            None
+        """
         prompt = hub.pull("rlm/rag-prompt")
         
         # Native chain

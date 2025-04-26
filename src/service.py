@@ -21,7 +21,13 @@ rag_pipeline = RAGPipeline(os.path.join(PROJECT_DIR, "output", "combined_output.
 @router.post("/ask", response_model=Response)
 async def ask_question(request: QuestionRequest):
     """
-    Endpoint to ask questions to the RAG system
+    Endpoint to ask questions to the RAG system.
+
+    Args:
+        request (QuestionRequest): The question request.
+
+    Returns:
+        Response: The response from the RAG system.
     """
     try:
         logger.info(f"Received question for session {request.session_id} using {request.method}")
@@ -60,7 +66,10 @@ async def ask_question(request: QuestionRequest):
 @router.get("/health")
 async def health_check():
     """
-    Health check endpoint
+    Health check endpoint.
+
+    Returns:
+        dict: The health check response.
     """
     return {"status": "healthy"}
 
