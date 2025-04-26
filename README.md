@@ -133,7 +133,7 @@ curl -X 'POST' \
 ## Evaluasi Output LLM
 
 ```bash
-uv run evaluate.py
+uv run evaluate.py --method native --delay 5 --input evaluasi_data.xlsx
 ```
 
 Hasil evaluasi dapat kamu rekap dalam bentuk spreadsheet:
